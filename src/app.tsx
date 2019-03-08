@@ -22,7 +22,9 @@ export default class App extends React.Component<{}, State> {
     }
 
     componentDidMount() {
-      this.fetchTodoList();
+      todoStorage.mock().then(() => {
+        this.fetchTodoList();
+      });
     }
 
     render() {

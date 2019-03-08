@@ -164,8 +164,52 @@
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "todoStorage", function() { return todoStorage; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "mrSG");
+
 var STORAGE_KEY = 'todos-list';
 var todoStorage = {
+    mock: function () {
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
+            var _loop_1, this_1, i;
+            var _this = this;
+            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!!localStorage.getItem(STORAGE_KEY)) return [3 /*break*/, 4];
+                        _loop_1 = function (i) {
+                            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, this_1.addTodo(String(Math.round(Math.random() * i * 100))).then(function (res) {
+                                            if (i > 10 && i <= 20) {
+                                                _this.setCompleteState(1 /* Done */, res.id);
+                                            }
+                                            else if (i > 20) {
+                                                _this.setCompleteState(2 /* Cancel */, res.id);
+                                            }
+                                        })];
+                                    case 1:
+                                        _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        };
+                        this_1 = this;
+                        i = 0;
+                        _a.label = 1;
+                    case 1:
+                        if (!(i < 30)) return [3 /*break*/, 4];
+                        return [5 /*yield**/, _loop_1(i)];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        i++;
+                        return [3 /*break*/, 1];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    },
     fetch: function (state) {
         return new Promise(function (resolve, reject) {
             var todos = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
@@ -191,7 +235,7 @@ var todoStorage = {
                 };
                 todos.push(newTodo);
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
-                resolve('success');
+                resolve(newTodo);
             });
         });
     },
@@ -505,7 +549,10 @@ var App = /** @class */ (function (_super) {
         return _this;
     }
     App.prototype.componentDidMount = function () {
-        this.fetchTodoList();
+        var _this = this;
+        _server_localStorage__WEBPACK_IMPORTED_MODULE_4__["todoStorage"].mock().then(function () {
+            _this.fetchTodoList();
+        });
     };
     App.prototype.render = function () {
         var _this = this;

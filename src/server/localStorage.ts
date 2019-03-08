@@ -13,6 +13,19 @@ export const enum CompleteState {
 const STORAGE_KEY = 'todos-list';
 
 export const todoStorage = {
+    async mock() {
+        if (!localStorage.getItem(STORAGE_KEY)) {
+            for (let i = 0; i < 30; i++) {
+                await this.addTodo(String(Math.round(Math.random() * i * 100))).then((res: Todo) => {
+                    if (i > 10 && i <= 20) {
+                        this.setCompleteState(CompleteState.Done, res.id);
+                    } else if (i > 20) {
+                        this.setCompleteState(CompleteState.Cancel, res.id);
+                    }
+                });
+            }
+        }
+    },
     fetch(state?: CompleteState): Promise<Todo[]> {
         return new Promise((resolve, reject) => {
             const todos = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
@@ -37,7 +50,7 @@ export const todoStorage = {
                 };
                 todos.push(newTodo);
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
-                resolve('success');
+                resolve(newTodo);
             });
         });
     },
@@ -56,3 +69,4 @@ export const todoStorage = {
         });
     }
 };
+
