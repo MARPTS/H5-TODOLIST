@@ -284,16 +284,14 @@ Handle.propTypes = {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
-
-// The error overlay is inspired (and mostly copied) from Create React App (https://github.com/facebookincubator/create-react-app)
+ // The error overlay is inspired (and mostly copied) from Create React App (https://github.com/facebookincubator/create-react-app)
 // They, in turn, got inspired by webpack-hot-middleware (https://github.com/glenjamin/webpack-hot-middleware).
 
 var ansiHTML = __webpack_require__(/*! ansi-html */ "ThyA");
+
 var Entities = __webpack_require__(/*! html-entities */ "gsez").AllHtmlEntities;
 
 var entities = new Entities();
-
 var colors = {
   reset: ['transparent', 'transparent'],
   black: '181818',
@@ -357,34 +355,33 @@ function ensureOverlayDivExists(onOverlayDivReady) {
     // Everything is ready, call the callback right away.
     onOverlayDivReady(overlayDiv);
     return;
-  }
-
-  // Creating an iframe may be asynchronous so we'll schedule the callback.
+  } // Creating an iframe may be asynchronous so we'll schedule the callback.
   // In case of multiple calls, last callback wins.
+
+
   lastOnOverlayDivReady = onOverlayDivReady;
 
   if (overlayIframe) {
     // We're already creating it.
     return;
-  }
+  } // Create iframe and, when it is ready, a div inside it.
 
-  // Create iframe and, when it is ready, a div inside it.
+
   overlayIframe = createOverlayIframe(function () {
-    overlayDiv = addOverlayDivTo(overlayIframe);
-    // Now we can talk!
-    lastOnOverlayDivReady(overlayDiv);
-  });
+    overlayDiv = addOverlayDivTo(overlayIframe); // Now we can talk!
 
-  // Zalgo alert: onIframeLoad() will be called either synchronously
+    lastOnOverlayDivReady(overlayDiv);
+  }); // Zalgo alert: onIframeLoad() will be called either synchronously
   // or asynchronously depending on the browser.
   // We delay adding it so `overlayIframe` is set when `onIframeLoad` fires.
+
   document.body.appendChild(overlayIframe);
 }
 
 function showMessageOverlay(message) {
   ensureOverlayDivExists(function (div) {
     // Make it look similar to our terminal.
-    div.innerHTML = '<span style="color: #' + colors.red + '">Failed to compile.</span><br><br>' + ansiHTML(entities.encode(message));
+    div.innerHTML = "<span style=\"color: #".concat(colors.red, "\">Failed to compile.</span><br><br>").concat(ansiHTML(entities.encode(message)));
   });
 }
 
@@ -392,21 +389,21 @@ function destroyErrorOverlay() {
   if (!overlayDiv) {
     // It is not there in the first place.
     return;
-  }
+  } // Clean up and reset internal state.
 
-  // Clean up and reset internal state.
+
   document.body.removeChild(overlayIframe);
   overlayDiv = null;
   overlayIframe = null;
   lastOnOverlayDivReady = null;
-}
+} // Successful compilation.
 
-// Successful compilation.
+
 exports.clear = function handleSuccess() {
   destroyErrorOverlay();
-};
+}; // Compilation with errors (e.g. syntax error or missing modules).
 
-// Compilation with errors (e.g. syntax error or missing modules).
+
 exports.showMessage = function handleMessage(messages) {
   showMessageOverlay(messages[0]);
 };
@@ -16942,19 +16939,17 @@ var socket = function initSocket(url, handlers) {
   sock.onclose = function onclose() {
     if (retries === 0) {
       handlers.close();
-    }
+    } // Try to reconnect.
 
-    // Try to reconnect.
-    sock = null;
 
-    // After 10 retries stop trying, to prevent logspam.
+    sock = null; // After 10 retries stop trying, to prevent logspam.
+
     if (retries <= 10) {
       // Exponentially increase timeout to reconnect.
       // Respectfully copied from the package `got`.
       // eslint-disable-next-line no-mixed-operators, no-restricted-properties
       var retryInMs = 1000 * Math.pow(2, retries) + Math.random() * 100;
       retries += 1;
-
       setTimeout(function () {
         socket(url, handlers);
       }, retryInMs);
@@ -16964,6 +16959,7 @@ var socket = function initSocket(url, handlers) {
   sock.onmessage = function onmessage(e) {
     // This assumes that all data sent via the websocket is JSON.
     var msg = JSON.parse(e.data);
+
     if (handlers[msg.type]) {
       handlers[msg.type](msg.data);
     }
@@ -36965,14 +36961,20 @@ DatePicker.contextTypes = {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(__resourceQuery) {
-
 /* global __resourceQuery WorkerGlobalScope self */
+
 /* eslint prefer-destructuring: off */
 
+var querystring = __webpack_require__(/*! querystring */ "s4NR");
+
 var url = __webpack_require__(/*! url */ "CxY0");
+
 var stripAnsi = __webpack_require__(/*! strip-ansi */ "qHCz");
+
 var log = __webpack_require__(/*! loglevel */ "XH0y").getLogger('webpack-dev-server');
+
 var socket = __webpack_require__(/*! ./socket */ "R6Jb");
+
 var overlay = __webpack_require__(/*! ./overlay */ "+gfj");
 
 function getCurrentScriptSource() {
@@ -36980,23 +36982,28 @@ function getCurrentScriptSource() {
   // but is not supported in all browsers.
   if (document.currentScript) {
     return document.currentScript.getAttribute('src');
-  }
-  // Fall back to getting all scripts in the document.
+  } // Fall back to getting all scripts in the document.
+
+
   var scriptElements = document.scripts || [];
   var currentScript = scriptElements[scriptElements.length - 1];
+
   if (currentScript) {
     return currentScript.getAttribute('src');
-  }
-  // Fail as there was no script to use.
+  } // Fail as there was no script to use.
+
+
   throw new Error('[WDS] Failed to get current script source.');
 }
 
-var urlParts = void 0;
+var urlParts;
 var hotReload = true;
+
 if (typeof window !== 'undefined') {
   var qs = window.location.search.toLowerCase();
   hotReload = qs.indexOf('hotreload=false') === -1;
 }
+
 if (true) {
   // If this bundle is inlined, use the resource query to get the correct url.
   urlParts = url.parse(__resourceQuery.substr(1));
@@ -37012,20 +37019,17 @@ var currentHash = '';
 var useWarningOverlay = false;
 var useErrorOverlay = false;
 var useProgress = false;
-
 var INFO = 'info';
 var WARNING = 'warning';
 var ERROR = 'error';
-var NONE = 'none';
+var NONE = 'none'; // Set the default log level
 
-// Set the default log level
-log.setDefaultLevel(INFO);
+log.setDefaultLevel(INFO); // Send messages to the outside, so plugins can consume it.
 
-// Send messages to the outside, so plugins can consume it.
 function sendMsg(type, data) {
   if (typeof self !== 'undefined' && (typeof WorkerGlobalScope === 'undefined' || !(self instanceof WorkerGlobalScope))) {
     self.postMessage({
-      type: 'webpack' + type,
+      type: "webpack".concat(type),
       data: data
     }, '*');
   }
@@ -37037,15 +37041,14 @@ var onSocketMsg = {
     log.info('[WDS] Hot Module Replacement enabled.');
   },
   invalid: function invalid() {
-    log.info('[WDS] App updated. Recompiling...');
-    // fixes #1042. overlay doesn't clear if errors are fixed but warnings remain.
+    log.info('[WDS] App updated. Recompiling...'); // fixes #1042. overlay doesn't clear if errors are fixed but warnings remain.
+
     if (useWarningOverlay || useErrorOverlay) overlay.clear();
     sendMsg('Invalid');
   },
   hash: function hash(_hash) {
     currentHash = _hash;
   },
-
   'still-ok': function stillOk() {
     log.info('[WDS] Nothing changed.');
     if (useWarningOverlay || useErrorOverlay) overlay.clear();
@@ -37053,23 +37056,28 @@ var onSocketMsg = {
   },
   'log-level': function logLevel(level) {
     var hotCtx = __webpack_require__("i3Xp");
+
     if (hotCtx.keys().indexOf('./log') !== -1) {
       hotCtx('./log').setLogLevel(level);
     }
+
     switch (level) {
       case INFO:
       case ERROR:
         log.setLevel(level);
         break;
+
       case WARNING:
         // loglevel's warning name is different from webpack's
         log.setLevel('warn');
         break;
+
       case NONE:
         log.disableAll();
         break;
+
       default:
-        log.error('[WDS] Unknown clientLogLevel \'' + level + '\'');
+        log.error("[WDS] Unknown clientLogLevel '".concat(level, "'"));
     }
   },
   overlay: function overlay(value) {
@@ -37088,45 +37096,52 @@ var onSocketMsg = {
       useProgress = _progress;
     }
   },
-
   'progress-update': function progressUpdate(data) {
-    if (useProgress) log.info('[WDS] ' + data.percent + '% - ' + data.msg + '.');
+    if (useProgress) log.info("[WDS] ".concat(data.percent, "% - ").concat(data.msg, "."));
     sendMsg('Progress', data);
   },
   ok: function ok() {
     sendMsg('Ok');
     if (useWarningOverlay || useErrorOverlay) overlay.clear();
     if (initial) return initial = false; // eslint-disable-line no-return-assign
+
     reloadApp();
   },
-
   'content-changed': function contentChanged() {
     log.info('[WDS] Content base changed. Reloading...');
     self.location.reload();
   },
   warnings: function warnings(_warnings) {
     log.warn('[WDS] Warnings while compiling.');
+
     var strippedWarnings = _warnings.map(function (warning) {
       return stripAnsi(warning);
     });
+
     sendMsg('Warnings', strippedWarnings);
+
     for (var i = 0; i < strippedWarnings.length; i++) {
       log.warn(strippedWarnings[i]);
     }
-    if (useWarningOverlay) overlay.showMessage(_warnings);
 
+    if (useWarningOverlay) overlay.showMessage(_warnings);
     if (initial) return initial = false; // eslint-disable-line no-return-assign
+
     reloadApp();
   },
   errors: function errors(_errors) {
     log.error('[WDS] Errors while compiling. Reload prevented.');
+
     var strippedErrors = _errors.map(function (error) {
       return stripAnsi(error);
     });
+
     sendMsg('Errors', strippedErrors);
+
     for (var i = 0; i < strippedErrors.length; i++) {
       log.error(strippedErrors[i]);
     }
+
     if (useErrorOverlay) overlay.showMessage(_errors);
     initial = false;
   },
@@ -37138,11 +37153,9 @@ var onSocketMsg = {
     sendMsg('Close');
   }
 };
-
 var hostname = urlParts.hostname;
-var protocol = urlParts.protocol;
+var protocol = urlParts.protocol; // check ipv4 and ipv6 `all hostname`
 
-// check ipv4 and ipv6 `all hostname`
 if (hostname === '0.0.0.0' || hostname === '::') {
   // why do we need this check?
   // hostname n/a for file protocol (example, when using electron, ionic)
@@ -37151,12 +37164,12 @@ if (hostname === '0.0.0.0' || hostname === '::') {
   if (self.location.hostname && !!~self.location.protocol.indexOf('http')) {
     hostname = self.location.hostname;
   }
-}
-
-// `hostname` can be empty when the script path is relative. In that case, specifying
+} // `hostname` can be empty when the script path is relative. In that case, specifying
 // a protocol would result in an invalid URL.
 // When https is used in the app, secure websockets are always necessary
 // because the browser doesn't accept non-secure websockets.
+
+
 if (hostname && (self.location.protocol === 'https:' || urlParts.hostname === '0.0.0.0')) {
   protocol = self.location.protocol;
 }
@@ -37166,11 +37179,12 @@ var socketUrl = url.format({
   auth: urlParts.auth,
   hostname: hostname,
   port: urlParts.port,
-  pathname: urlParts.path == null || urlParts.path === '/' ? '/sockjs-node' : urlParts.path
+  // If sockPath is provided it'll be passed in via the __resourceQuery as a
+  // query param so it has to be parsed out of the querystring in order for the
+  // client to open the socket to the correct location.
+  pathname: urlParts.path == null || urlParts.path === '/' ? '/sockjs-node' : querystring.parse(urlParts.path).sockPath || urlParts.path
 });
-
 socket(socketUrl, onSocketMsg);
-
 var isUnloading = false;
 self.addEventListener('beforeunload', function () {
   isUnloading = true;
@@ -37180,24 +37194,28 @@ function reloadApp() {
   if (isUnloading || !hotReload) {
     return;
   }
+
   if (_hot) {
-    log.info('[WDS] App hot update...');
-    // eslint-disable-next-line global-require
+    log.info('[WDS] App hot update...'); // eslint-disable-next-line global-require
+
     var hotEmitter = __webpack_require__(/*! webpack/hot/emitter */ "k+Kj");
+
     hotEmitter.emit('webpackHotUpdate', currentHash);
+
     if (typeof self !== 'undefined' && self.window) {
       // broadcast update to window
-      self.postMessage('webpackHotUpdate' + currentHash, '*');
+      self.postMessage("webpackHotUpdate".concat(currentHash), '*');
     }
   } else {
-    var rootWindow = self;
-    // use parent window for reload (in case we're in an iframe with no valid src)
+    var rootWindow = self; // use parent window for reload (in case we're in an iframe with no valid src)
+
     var intervalId = self.setInterval(function () {
       if (rootWindow.location.protocol !== 'about:') {
         // reload immediately if protocol is valid
         applyReload(rootWindow, intervalId);
       } else {
         rootWindow = rootWindow.parent;
+
         if (rootWindow.parent === rootWindow) {
           // if parent equals current window we've reached the root which would continue forever, so trigger a reload anyways
           applyReload(rootWindow, intervalId);
