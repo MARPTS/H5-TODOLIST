@@ -154,308 +154,90 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "+F/S":
+/*!************************************!*\
+  !*** ./src/server/localStorage.ts ***!
+  \************************************/
+/*! exports provided: todoStorage */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "todoStorage", function() { return todoStorage; });
+var STORAGE_KEY = 'todos-list';
+var todoStorage = {
+    fetch: function (state) {
+        return new Promise(function (resolve, reject) {
+            var todos = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            if (!state) {
+                resolve(todos);
+            }
+            else {
+                var targetList = todos.find(function (todo, index) {
+                    todo.completed = state;
+                });
+                resolve(targetList);
+            }
+        });
+    },
+    addTodo: function (title) {
+        return new Promise(function (resolve) {
+            todoStorage.fetch().then(function (data) {
+                var todos = data;
+                var newTodo = {
+                    id: data.length + 1,
+                    completed: 0 /* Todo */,
+                    title: title
+                };
+                todos.push(newTodo);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+                resolve('success');
+            });
+        });
+    },
+    setCompleteState: function (state, id) {
+        var _this = this;
+        return new Promise(function (resove, reject) {
+            _this.fetch().then(function (res) {
+                var todoIndex = res.findIndex(function (todo) { return todo.id === id; });
+                if (todoIndex === -1) {
+                    reject('can not find the id' + id);
+                }
+                else {
+                    res[todoIndex].completed = state;
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(res));
+                    resove('success');
+                }
+            });
+        });
+    }
+};
+
+
+/***/ }),
+
 /***/ 0:
-/*!*******************************************************************************!*\
-  !*** multi (webpack)-dev-server/client?http://localhost:8888 ./src/index.tsx ***!
-  \*******************************************************************************/
+/*!*****************************************************************************!*\
+  !*** multi (webpack)-dev-server/client?http://0.0.0.0:8888 ./src/index.tsx ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /Users/mac/2019program/H5-TODOLIST/node_modules/webpack-dev-server/client/index.js?http://localhost:8888 */"xJUu");
+__webpack_require__(/*! /Users/mac/2019program/H5-TODOLIST/node_modules/webpack-dev-server/client/index.js?http://0.0.0.0:8888 */"q9+0");
 module.exports = __webpack_require__(/*! ./src/index.tsx */"2YZa");
 
 
 /***/ }),
 
-/***/ "1YCh":
-/*!*******************************!*\
-  !*** ./src/components/app.ts ***!
-  \*******************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _todomvc__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./todomvc */ "LHfi");
-
-/* harmony default export */ __webpack_exports__["default"] = (_todomvc__WEBPACK_IMPORTED_MODULE_0__["default"]);
-
-
-/***/ }),
-
-/***/ "2YZa":
-/*!***********************!*\
-  !*** ./src/index.tsx ***!
-  \***********************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "cDcd");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "faye");
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _components_app__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/app */ "1YCh");
-
-
-
-react_dom__WEBPACK_IMPORTED_MODULE_1__["render"](react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_components_app__WEBPACK_IMPORTED_MODULE_2__["default"], null), document.querySelector('#root'));
-
-
-/***/ }),
-
-/***/ "LHfi":
-/*!******************************************!*\
-  !*** ./src/components/todomvc/index.tsx ***!
-  \******************************************/
-/*! exports provided: TodoMvc, default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TodoMvc", function() { return TodoMvc; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "mrSG");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "cDcd");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _index_less__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./index.less */ "PdlB");
-/* harmony import */ var _index_less__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_index_less__WEBPACK_IMPORTED_MODULE_2__);
-
-
-
-var STORAGE_KEY = 'todos-react-ts-demo';
-var filters = ['all', 'active', 'completed'];
-var todoStorage = {
-    uid: 1,
-    fetch: function () {
-        var todos = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-        todos.forEach(function (todo, index) {
-            todo.id = index;
-        });
-        todoStorage.uid = todos.length;
-        return todos;
-    },
-    save: function (todos) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
-    }
-};
-var TodoMvc = /** @class */ (function (_super) {
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](TodoMvc, _super);
-    function TodoMvc() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.state = {
-            newTodo: '',
-            filteredTodos: [],
-            todoList: todoStorage.fetch(),
-            editedTodo: {},
-            beforeEditCache: '',
-            visibility: 'all'
-        };
-        _this.onHashChange = function () {
-            var visibility = window.location.hash.replace(/#\/?/, '');
-            if (filters.indexOf(visibility) > -1) {
-                _this.setState({
-                    visibility: visibility
-                });
-            }
-            else {
-                window.location.hash = '';
-                _this.setState({
-                    visibility: 'all'
-                });
-            }
-        };
-        _this.addTodo = function (event) {
-            if (Number(event.keyCode) === 13) {
-                var _a = _this.state, newTodo = _a.newTodo, todoList = _a.todoList;
-                todoList.push({
-                    id: todoStorage.uid++,
-                    completed: 'todo',
-                    title: newTodo.trim()
-                });
-                if (newTodo) {
-                    _this.setState({
-                        todoList: todoList,
-                        newTodo: ''
-                    });
-                }
-                todoStorage.save(todoList);
-            }
-        };
-        _this.handleOnChange = function (event) {
-            var value = event.target.value;
-            _this.setState({
-                newTodo: value
-            });
-        };
-        _this.editTodo = function (event) {
-            var id = Number(event.target.getAttribute('data-id'));
-            var index = _this.getIndex(id);
-            var todoList = _this.state.todoList;
-            if (index > -1) {
-                var todo = todoList[index];
-                _this.setState({
-                    editedTodo: todo
-                });
-            }
-        };
-        _this.removeTodo = function (event) {
-            var id = Number(event.target.getAttribute('data-id'));
-            var index = _this.getIndex(id);
-            var todoList = _this.state.todoList;
-            if (index > -1) {
-                todoList.splice(index, 1);
-                _this.setState({
-                    todoList: todoList
-                });
-                todoStorage.save(todoList);
-            }
-        };
-        _this.doneTodo = function (event) {
-            var value = event.target.value.trim();
-            var _a = _this.state, todoList = _a.todoList, editedTodo = _a.editedTodo;
-            var index = todoList.indexOf(editedTodo);
-            if (index > -1) {
-                todoList.splice(index, 1, tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"]({}, editedTodo, { title: value }));
-                _this.setState({
-                    todoList: todoList,
-                    editedTodo: null
-                });
-                todoStorage.save(todoList);
-            }
-        };
-        _this.handleEditTodo = function (event) {
-            var keyCode = Number(event.keyCode);
-            if (keyCode === 27) {
-                _this.setState({
-                    editedTodo: null
-                });
-            }
-            else if (keyCode === 13) {
-                _this.doneTodo(event);
-            }
-        };
-        _this.handleCheckBox = function (event) {
-            var checked = event.target.checked;
-            var id = Number(event.target.getAttribute('data-id'));
-            var index = _this.getIndex(id);
-            var todoList = _this.state.todoList;
-            if (index > -1) {
-                todoList[index].completed = checked ? 'done' : 'todo';
-            }
-            _this.setState({
-                todoList: todoList
-            });
-            todoStorage.save(todoList);
-        };
-        _this.handleCheckBoxAll = function (event) {
-            var checked = event.target.checked;
-            var todoList = _this.state.todoList;
-            var completed = checked ? 'done' : 'todo';
-            todoList.forEach(function (todo) {
-                todo.completed = completed;
-            });
-            _this.setState({
-                todoList: todoList
-            });
-            todoStorage.save(todoList);
-        };
-        _this.removeCompleted = function (event) {
-            var todoList = _this.state.todoList;
-            todoList.forEach(function (todo, index) {
-                if (todo.completed === 'done') {
-                    todoList.splice(index, 1);
-                }
-            });
-            _this.setState({
-                todoList: todoList
-            });
-            todoStorage.save(todoList);
-        };
-        _this.fliterFactory = function () {
-            var todoList = _this.state.todoList;
-            return {
-                all: function () {
-                    return todoList;
-                },
-                active: function () {
-                    return todoList.filter(function (todo) { return todo.completed === 'todo'; });
-                },
-                completed: function () {
-                    return todoList.filter(function (todo) { return todo.completed === 'done'; });
-                }
-            };
-        };
-        return _this;
-    }
-    TodoMvc.prototype.componentDidMount = function () {
-        window.addEventListener('hashchange', this.onHashChange);
-        this.onHashChange();
-    };
-    TodoMvc.prototype.componentWillUnmount = function () {
-        window.removeEventListener('hashchange', this.onHashChange);
-    };
-    TodoMvc.prototype.render = function () {
-        var _this = this;
-        var _a = this.state, newTodo = _a.newTodo, todoList = _a.todoList, editedTodo = _a.editedTodo, visibility = _a.visibility;
-        var remaining = todoList.filter(function (todo) { return todo.completed === 'todo'; }).length;
-        var pluralize = remaining === 1 ? 'item' : 'items';
-        var filter = this.fliterFactory();
-        var filteredTodos = filter[visibility]();
-        return (react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("section", { className: "todoapp" },
-            react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("header", { className: "header" },
-                react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("h1", null, "todos"),
-                react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("input", { className: "new-todo", autoFocus: true, autoComplete: "off", placeholder: "What needs to be done?", value: newTodo, onChange: this.handleOnChange, onKeyDown: this.addTodo })),
-            !!filteredTodos.length && react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("section", { className: "main" },
-                react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("input", { className: "toggle-all", type: "checkbox", value: "allDone", onChange: this.handleCheckBoxAll }),
-                react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("ul", { className: "todo-list" }, filteredTodos.map(function (todo, index) { return (react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("li", { key: todo.id, className: "todo" + (todo.completed === 'done' ? ' completed' : '') + (todo === editedTodo ? ' editing' : '') },
-                    react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("div", { className: "view" },
-                        react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("input", { className: "toggle", type: "checkbox", checked: todo.completed === 'done', onChange: _this.handleCheckBox, "data-id": todo.id }),
-                        react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("label", { onDoubleClick: _this.editTodo, "data-id": todo.id }, todo.title),
-                        react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("button", { className: "destroy", onClick: _this.removeTodo, "data-id": todo.id })),
-                    react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("input", { className: "edit", type: "text", defaultValue: todo.title, autoFocus: todo === editedTodo, onBlur: _this.doneTodo, onKeyDown: _this.handleEditTodo }))); }))),
-            !!todoList.length && react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("footer", { className: "footer" },
-                react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("span", { className: "todo-count" },
-                    react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("strong", null, remaining),
-                    " ",
-                    remaining && pluralize,
-                    " left"),
-                react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("ul", { className: "filters" },
-                    react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("li", null,
-                        react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("a", { href: "#/all", className: visibility === 'all' ? 'selected' : '' }, "All")),
-                    react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("li", null,
-                        react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("a", { href: "#/active", className: visibility === 'active' ? 'selected' : '' }, "Active")),
-                    react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("li", null,
-                        react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("a", { href: "#/completed", className: visibility === 'completed' ? 'selected' : '' }, "Completed"))),
-                (todoList.length > remaining) && react__WEBPACK_IMPORTED_MODULE_1__["createElement"]("button", { className: "clear-completed", onClick: this.removeCompleted }, "Clear completed"))));
-    };
-    TodoMvc.prototype.getIndex = function (id) {
-        var todoList = this.state.todoList;
-        var index = -1;
-        todoList.forEach(function (todo, i) {
-            if (todo.id === id) {
-                index = i;
-            }
-        });
-        return index;
-    };
-    return TodoMvc;
-}(react__WEBPACK_IMPORTED_MODULE_1__["Component"]));
-
-/* harmony default export */ __webpack_exports__["default"] = (TodoMvc);
-
-
-/***/ }),
-
-/***/ "PdlB":
-/*!*******************************************!*\
-  !*** ./src/components/todomvc/index.less ***!
-  \*******************************************/
+/***/ "1zJm":
+/*!********************************************!*\
+  !*** ./src/components/TodoList/index.less ***!
+  \********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 
-var content = __webpack_require__(/*! !../../../node_modules/css-loader!../../../node_modules/postcss-loader/src!../../../node_modules/less-loader/dist/cjs.js!./index.less */ "oyDm");
+var content = __webpack_require__(/*! !../../../node_modules/css-loader!../../../node_modules/postcss-loader/src!../../../node_modules/less-loader/dist/cjs.js!./index.less */ "y6Zf");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -474,6 +256,96 @@ var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addS
 if(content.locals) module.exports = content.locals;
 
 if(false) {}
+
+/***/ }),
+
+/***/ "2YZa":
+/*!***********************!*\
+  !*** ./src/index.tsx ***!
+  \***********************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "cDcd");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "faye");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _app__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./app */ "pLYI");
+/* harmony import */ var antd_mobile_dist_antd_mobile_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! antd-mobile/dist/antd-mobile.css */ "v++Q");
+/* harmony import */ var antd_mobile_dist_antd_mobile_css__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(antd_mobile_dist_antd_mobile_css__WEBPACK_IMPORTED_MODULE_3__);
+
+
+
+
+react_dom__WEBPACK_IMPORTED_MODULE_1__["render"](react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_app__WEBPACK_IMPORTED_MODULE_2__["default"], null), document.querySelector('#root'));
+
+
+/***/ }),
+
+/***/ "5H8B":
+/*!*******************************************!*\
+  !*** ./src/components/TodoList/index.tsx ***!
+  \*******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "mrSG");
+/* harmony import */ var antd_mobile__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! antd-mobile */ "9ibs");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "cDcd");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _server_localStorage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../server/localStorage */ "+F/S");
+/* harmony import */ var _index_less__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./index.less */ "1zJm");
+/* harmony import */ var _index_less__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_index_less__WEBPACK_IMPORTED_MODULE_4__);
+
+
+var CheckboxItem = antd_mobile__WEBPACK_IMPORTED_MODULE_1__["Checkbox"].CheckboxItem;
+
+
+
+var TodoList = /** @class */ (function (_super) {
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](TodoList, _super);
+    function TodoList() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.onChange = function (evt, id) {
+            if (_this.props.completeState === 2 /* Cancel */) {
+                return;
+            }
+            _server_localStorage__WEBPACK_IMPORTED_MODULE_3__["todoStorage"].setCompleteState(evt.target.checked ? 1 /* Done */ : 0 /* Todo */, id);
+            antd_mobile__WEBPACK_IMPORTED_MODULE_1__["Toast"].success('success!', 0.5, function () {
+                _this.props.fetch();
+            });
+        };
+        _this.onClickCancel = function (id) {
+            _server_localStorage__WEBPACK_IMPORTED_MODULE_3__["todoStorage"].setCompleteState(2 /* Cancel */, id);
+            antd_mobile__WEBPACK_IMPORTED_MODULE_1__["Toast"].success('success cancel this item!', 0.5, function () {
+                _this.props.fetch();
+            });
+        };
+        return _this;
+    }
+    TodoList.prototype.render = function () {
+        var _this = this;
+        var _a = this.props, todoList = _a.todoList, completeState = _a.completeState;
+        var count = 0;
+        var render = react__WEBPACK_IMPORTED_MODULE_2__["createElement"](antd_mobile__WEBPACK_IMPORTED_MODULE_1__["List"], null, todoList.map(function (todo) {
+            if (todo.completed === completeState) {
+                count++;
+                return react__WEBPACK_IMPORTED_MODULE_2__["createElement"]("div", { style: { position: 'relative' } },
+                    react__WEBPACK_IMPORTED_MODULE_2__["createElement"](CheckboxItem, { key: todo.id, onChange: function (evt) { return _this.onChange(evt, todo.id); }, defaultChecked: todo.completed === 1 /* Done */, disabled: completeState === 2 /* Cancel */ }, todo.title),
+                    completeState === 2 /* Cancel */ ? '' : react__WEBPACK_IMPORTED_MODULE_2__["createElement"](antd_mobile__WEBPACK_IMPORTED_MODULE_1__["Button"], { type: "ghost", size: "small", inline: true, className: "list-cancel-btn", onClick: function () { return _this.onClickCancel(todo.id); } }, "cancel"));
+            }
+            return;
+        }));
+        return react__WEBPACK_IMPORTED_MODULE_2__["createElement"]("div", null, count ? render : react__WEBPACK_IMPORTED_MODULE_2__["createElement"]("div", { className: "enpty-placeHolder" }, "Hear is enpty\uFF01"));
+    };
+    return TodoList;
+}(react__WEBPACK_IMPORTED_MODULE_2__["Component"]));
+/* harmony default export */ __webpack_exports__["default"] = (TodoList);
+
 
 /***/ }),
 
@@ -533,10 +405,142 @@ webpackContext.id = "i3Xp";
 
 /***/ }),
 
-/***/ "oyDm":
-/*!**********************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader!./node_modules/postcss-loader/src!./node_modules/less-loader/dist/cjs.js!./src/components/todomvc/index.less ***!
-  \**********************************************************************************************************************************************/
+/***/ "lsAC":
+/*!*************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader!./node_modules/postcss-loader/src!./node_modules/less-loader/dist/cjs.js!./src/app.less ***!
+  \*************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../node_modules/css-loader/lib/css-base.js */ "I1BE")(false);
+// imports
+
+
+// module
+exports.push([module.i, "html,\nbody {\n  margin: 0;\n  padding: 0;\n  width: 100%;\n  height: 100%;\n  font-family: PingFang SC,Helvetica Neue,Hiragino Sans GB,Helvetica,Microsoft YaHei,Arial;\n}\n#root {\n  height: 100%;\n}\n.title {\n  font-size: 19px;\n  color: #404040;\n  padding: 21px 15px;\n  text-align: center;\n  height: 20px;\n  position: relative;\n  text-indent: 20px;\n}\n.title .add-btn {\n  width: 30px;\n  height: 30px;\n  position: absolute!important;\n  left: 100px;\n  top: 50%;\n  -webkit-transform: translateY(-50%) rotate(45deg);\n          transform: translateY(-50%) rotate(45deg);\n  border-radius: 100%;\n}\n.title .add-btn span {\n  position: relative;\n  right: -50%;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "mPlr":
+/*!**********************!*\
+  !*** ./src/app.less ***!
+  \**********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../node_modules/css-loader!../node_modules/postcss-loader/src!../node_modules/less-loader/dist/cjs.js!./app.less */ "lsAC");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../node_modules/style-loader/lib/addStyles.js */ "aET+")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "pLYI":
+/*!*********************!*\
+  !*** ./src/app.tsx ***!
+  \*********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "mrSG");
+/* harmony import */ var antd_mobile__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! antd-mobile */ "9ibs");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "cDcd");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _components_TodoList__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/TodoList */ "5H8B");
+/* harmony import */ var _server_localStorage__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./server/localStorage */ "+F/S");
+/* harmony import */ var _app_less__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./app.less */ "mPlr");
+/* harmony import */ var _app_less__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_app_less__WEBPACK_IMPORTED_MODULE_5__);
+
+
+
+
+
+var prompt = antd_mobile__WEBPACK_IMPORTED_MODULE_1__["Modal"].prompt;
+// import TodoMvc from './components/todomvc';
+
+var App = /** @class */ (function (_super) {
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](App, _super);
+    function App(props) {
+        var _this = _super.call(this, props) || this;
+        _this.fetchTodoList = function (completeState) {
+            _server_localStorage__WEBPACK_IMPORTED_MODULE_4__["todoStorage"].fetch(completeState).then(function (data) {
+                _this.setState({
+                    todoList: data,
+                    isHaveToDoList: !!data.find(function (todo) { return todo.completed === 0 /* Todo */; })
+                });
+            });
+        };
+        _this.submitTodo = function (value) {
+            _server_localStorage__WEBPACK_IMPORTED_MODULE_4__["todoStorage"].addTodo(value).then(function () {
+                antd_mobile__WEBPACK_IMPORTED_MODULE_1__["Toast"].success('success!', 0.5, function () {
+                    _this.fetchTodoList();
+                });
+            });
+        };
+        _this.state = {
+            todoList: [],
+            isHaveToDoList: false
+        };
+        return _this;
+    }
+    App.prototype.componentDidMount = function () {
+        this.fetchTodoList();
+    };
+    App.prototype.render = function () {
+        var _this = this;
+        var tabs = [
+            { title: react__WEBPACK_IMPORTED_MODULE_2__["createElement"](antd_mobile__WEBPACK_IMPORTED_MODULE_1__["Badge"], { dot: this.state.isHaveToDoList }, "Ready"), sub: 0 /* Todo */ },
+            { title: react__WEBPACK_IMPORTED_MODULE_2__["createElement"](antd_mobile__WEBPACK_IMPORTED_MODULE_1__["Badge"], null, "Finished"), sub: 1 /* Done */ },
+            { title: react__WEBPACK_IMPORTED_MODULE_2__["createElement"](antd_mobile__WEBPACK_IMPORTED_MODULE_1__["Badge"], null, "Cancel"), sub: 2 /* Cancel */ }
+        ];
+        var promptClick = function () { return prompt('ToDoList', 'Now, Write your work list!', [
+            { text: 'Cancel' },
+            { text: 'Submit', onPress: _this.submitTodo }
+        ], 'default', ''); };
+        return (react__WEBPACK_IMPORTED_MODULE_2__["createElement"]("div", { style: { height: '100%' } },
+            react__WEBPACK_IMPORTED_MODULE_2__["createElement"]("header", { className: "title", onClick: promptClick },
+                react__WEBPACK_IMPORTED_MODULE_2__["createElement"](antd_mobile__WEBPACK_IMPORTED_MODULE_1__["Icon"], { type: "cross-circle", className: "add-btn" }),
+                "To Do List"),
+            react__WEBPACK_IMPORTED_MODULE_2__["createElement"](antd_mobile__WEBPACK_IMPORTED_MODULE_1__["Tabs"], { tabs: tabs, initialPage: 0 },
+                react__WEBPACK_IMPORTED_MODULE_2__["createElement"]("div", { style: { height: '100%', backgroundColor: '#fff' } },
+                    react__WEBPACK_IMPORTED_MODULE_2__["createElement"](_components_TodoList__WEBPACK_IMPORTED_MODULE_3__["default"], { todoList: this.state.todoList, completeState: 0 /* Todo */, fetch: this.fetchTodoList })),
+                react__WEBPACK_IMPORTED_MODULE_2__["createElement"]("div", { style: { height: '100%', backgroundColor: '#fff' } },
+                    react__WEBPACK_IMPORTED_MODULE_2__["createElement"](_components_TodoList__WEBPACK_IMPORTED_MODULE_3__["default"], { todoList: this.state.todoList, completeState: 1 /* Done */, fetch: this.fetchTodoList })),
+                react__WEBPACK_IMPORTED_MODULE_2__["createElement"]("div", { style: { height: '100%', backgroundColor: '#fff' } },
+                    react__WEBPACK_IMPORTED_MODULE_2__["createElement"](_components_TodoList__WEBPACK_IMPORTED_MODULE_3__["default"], { todoList: this.state.todoList, completeState: 2 /* Cancel */, fetch: this.fetchTodoList })))));
+    };
+    return App;
+}(react__WEBPACK_IMPORTED_MODULE_2__["Component"]));
+/* harmony default export */ __webpack_exports__["default"] = (App);
+
+
+/***/ }),
+
+/***/ "y6Zf":
+/*!***********************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader!./node_modules/postcss-loader/src!./node_modules/less-loader/dist/cjs.js!./src/components/TodoList/index.less ***!
+  \***********************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -545,7 +549,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "html,\nbody {\n  margin: 0;\n  padding: 0;\n}\nbutton {\n  margin: 0;\n  padding: 0;\n  border: 0;\n  background: none;\n  font-size: 100%;\n  vertical-align: baseline;\n  font-family: inherit;\n  font-weight: inherit;\n  color: inherit;\n  -webkit-appearance: none;\n  -moz-appearance: none;\n       appearance: none;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n}\nbody {\n  font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;\n  line-height: 1.4em;\n  background: #f5f5f5;\n  color: #4d4d4d;\n  min-width: 230px;\n  max-width: 550px;\n  margin: 0 auto;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  font-weight: 300;\n}\nbutton,\ninput[type=\"checkbox\"] {\n  outline: none;\n}\n.hidden {\n  display: none;\n}\n.todoapp {\n  background: #fff;\n  margin: 130px 0 40px 0;\n  position: relative;\n  -webkit-box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);\n          box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);\n}\n.todoapp input::-webkit-input-placeholder {\n  font-style: italic;\n  font-weight: 300;\n  color: #e6e6e6;\n}\n.todoapp input::-moz-placeholder {\n  font-style: italic;\n  font-weight: 300;\n  color: #e6e6e6;\n}\n.todoapp input::input-placeholder {\n  font-style: italic;\n  font-weight: 300;\n  color: #e6e6e6;\n}\n.todoapp h1 {\n  position: absolute;\n  top: -155px;\n  width: 100%;\n  font-size: 100px;\n  font-weight: 100;\n  text-align: center;\n  color: rgba(175, 47, 47, 0.15);\n  -webkit-text-rendering: optimizeLegibility;\n  -moz-text-rendering: optimizeLegibility;\n  text-rendering: optimizeLegibility;\n}\n.new-todo,\n.edit {\n  position: relative;\n  margin: 0;\n  width: 100%;\n  font-size: 24px;\n  font-family: inherit;\n  font-weight: inherit;\n  line-height: 1.4em;\n  border: 0;\n  outline: none;\n  color: inherit;\n  padding: 6px;\n  border: 1px solid #999;\n  -webkit-box-shadow: inset 0 -1px 5px 0 rgba(0, 0, 0, 0.2);\n          box-shadow: inset 0 -1px 5px 0 rgba(0, 0, 0, 0.2);\n  -webkit-box-sizing: border-box;\n          box-sizing: border-box;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n}\n.new-todo {\n  padding: 16px 16px 16px 60px;\n  border: none;\n  background: rgba(0, 0, 0, 0.003);\n  -webkit-box-shadow: inset 0 -2px 1px rgba(0, 0, 0, 0.03);\n          box-shadow: inset 0 -2px 1px rgba(0, 0, 0, 0.03);\n}\n.main {\n  position: relative;\n  z-index: 2;\n  border-top: 1px solid #e6e6e6;\n}\nlabel[for='toggle-all'] {\n  display: none;\n}\n.toggle-all {\n  position: absolute;\n  top: -55px;\n  left: -12px;\n  width: 60px;\n  height: 34px;\n  text-align: center;\n  border: none;\n  /* Mobile Safari */\n}\n.toggle-all:before {\n  content: '\\276F';\n  font-size: 22px;\n  color: #e6e6e6;\n  padding: 10px 27px 10px 27px;\n}\n.toggle-all:checked:before {\n  color: #737373;\n}\n.todo-list {\n  margin: 0;\n  padding: 0;\n  list-style: none;\n}\n.todo-list li {\n  position: relative;\n  font-size: 24px;\n  border-bottom: 1px solid #ededed;\n}\n.todo-list li:last-child {\n  border-bottom: none;\n}\n.todo-list li.editing {\n  border-bottom: none;\n  padding: 0;\n}\n.todo-list li.editing .edit {\n  display: block;\n  width: 506px;\n  padding: 13px 17px 12px 17px;\n  margin: 0 0 0 43px;\n}\n.todo-list li.editing .view {\n  display: none;\n}\n.todo-list li .toggle {\n  text-align: center;\n  width: 40px;\n  /* auto, since non-WebKit browsers doesn't support input styling */\n  height: auto;\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  margin: auto 0;\n  border: none;\n  /* Mobile Safari */\n  -webkit-appearance: none;\n  -moz-appearance: none;\n       appearance: none;\n}\n.todo-list li .toggle:after {\n  content: url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"40\" height=\"40\" viewBox=\"-10 -18 100 135\"><circle cx=\"50\" cy=\"50\" r=\"50\" fill=\"none\" stroke=\"#ededed\" stroke-width=\"3\"/></svg>');\n}\n.todo-list li .toggle:checked:after {\n  content: url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"40\" height=\"40\" viewBox=\"-10 -18 100 135\"><circle cx=\"50\" cy=\"50\" r=\"50\" fill=\"none\" stroke=\"#bddad5\" stroke-width=\"3\"/><path fill=\"#5dc2af\" d=\"M72 25L42 71 27 56l-4 4 20 20 34-52z\"/></svg>');\n}\n.todo-list li label {\n  white-space: pre-line;\n  word-break: break-all;\n  padding: 15px 60px 15px 15px;\n  margin-left: 45px;\n  display: block;\n  line-height: 1.2;\n  -webkit-transition: color 0.4s;\n  transition: color 0.4s;\n}\n.todo-list li.completed label {\n  color: #d9d9d9;\n  text-decoration: line-through;\n}\n.todo-list li .destroy {\n  display: none;\n  position: absolute;\n  top: 0;\n  right: 10px;\n  bottom: 0;\n  width: 40px;\n  height: 40px;\n  margin: auto 0;\n  font-size: 30px;\n  color: #cc9a9a;\n  margin-bottom: 11px;\n  -webkit-transition: color 0.2s ease-out;\n  transition: color 0.2s ease-out;\n}\n.todo-list li .destroy:hover {\n  color: #af5b5e;\n}\n.todo-list li .destroy:after {\n  content: '\\D7';\n}\n.todo-list li:hover .destroy {\n  display: block;\n}\n.todo-list li .edit {\n  display: none;\n}\n.todo-list li.editing:last-child {\n  margin-bottom: -1px;\n}\n.footer {\n  color: #777;\n  padding: 10px 15px;\n  height: 20px;\n  text-align: center;\n  border-top: 1px solid #e6e6e6;\n}\n.footer:before {\n  content: '';\n  position: absolute;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  height: 50px;\n  overflow: hidden;\n  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2), 0 8px 0 -3px #f6f6f6, 0 9px 1px -3px rgba(0, 0, 0, 0.2), 0 16px 0 -6px #f6f6f6, 0 17px 2px -6px rgba(0, 0, 0, 0.2);\n          box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2), 0 8px 0 -3px #f6f6f6, 0 9px 1px -3px rgba(0, 0, 0, 0.2), 0 16px 0 -6px #f6f6f6, 0 17px 2px -6px rgba(0, 0, 0, 0.2);\n}\n.todo-count {\n  float: left;\n  text-align: left;\n}\n.todo-count strong {\n  font-weight: 300;\n}\n.filters {\n  margin: 0;\n  padding: 0;\n  list-style: none;\n  position: absolute;\n  right: 0;\n  left: 0;\n}\n.filters li {\n  display: inline;\n}\n.filters li a {\n  color: inherit;\n  margin: 3px;\n  padding: 3px 7px;\n  text-decoration: none;\n  border: 1px solid transparent;\n  border-radius: 3px;\n}\n.filters li a.selected,\n.filters li a:hover {\n  border-color: rgba(175, 47, 47, 0.1);\n}\n.filters li a.selected {\n  border-color: rgba(175, 47, 47, 0.2);\n}\n.clear-completed,\nhtml .clear-completed:active {\n  float: right;\n  position: relative;\n  line-height: 20px;\n  text-decoration: none;\n  cursor: pointer;\n}\n.clear-completed:hover {\n  text-decoration: underline;\n}\n.info {\n  margin: 65px auto 0;\n  color: #bfbfbf;\n  font-size: 10px;\n  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);\n  text-align: center;\n}\n.info p {\n  line-height: 1;\n}\n.info a {\n  color: inherit;\n  text-decoration: none;\n  font-weight: 400;\n}\n.info a:hover {\n  text-decoration: underline;\n}\n/*\n\tHack to remove background from Mobile Safari.\n\tCan't use it globally since it destroys checkboxes in Firefox\n*/\n@media screen and (-webkit-min-device-pixel-ratio: 0) {\n  .toggle-all,\n  .todo-list li .toggle {\n    background: none;\n  }\n  .todo-list li .toggle {\n    height: 40px;\n  }\n  .toggle-all {\n    -webkit-transform: rotate(90deg);\n    transform: rotate(90deg);\n    -webkit-appearance: none;\n    -moz-appearance: none;\n         appearance: none;\n  }\n}\n@media (max-width: 430px) {\n  .footer {\n    height: 50px;\n  }\n  .filters {\n    bottom: 10px;\n  }\n}\n", ""]);
+exports.push([module.i, ".enpty-placeHolder {\n  height: 500px;\n  line-height: 500px;\n  font-size: 20px;\n  font-weight: bold;\n  text-align: center;\n}\n.list-cancel-btn {\n  position: absolute!important;\n  right: 20px;\n  top: 7px;\n  z-index: 99;\n}\n", ""]);
 
 // exports
 

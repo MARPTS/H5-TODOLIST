@@ -18,7 +18,11 @@
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true,
+    "allowSyntheticDefaultImports":true,
     "experimentalDecorators": true
+  },
+  "rules": {
+    "jsx-no-lambda": false
   },
   "exclude": [
     "node_modules",
@@ -26,5 +30,6 @@
     "config",
     "scripts",
     "postcss.config.js"
-  ]
+  ],
+  "module": "ESNext"
 }

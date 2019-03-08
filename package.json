@@ -7,6 +7,7 @@
   "dependencies": {
     "@types/react": "^16.7.13",
     "@types/react-dom": "^16.0.11",
+    "antd-mobile": "^2.2.9",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "webpack": "^4.27.1"
@@ -28,6 +29,7 @@
     "postcss-preset-env": "^6.5.0",
     "source-map-loader": "^0.2.4",
     "style-loader": "^0.23.1",
+    "ts-import-plugin": "^1.5.5",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.17.0",
     "tslint-react": "^3.6.0",
@@ -38,7 +40,7 @@
     "write-file-webpack-plugin": "^4.5.0"
   },
   "scripts": {
-    "start": "cross-env NODE_ENV=development webpack-dev-server --open --config config/webpack.dev.js",
+    "start": "cross-env NODE_ENV=development webpack-dev-server --open --config config/webpack.dev.js --host 0.0.0.0",
     "dev": "cross-env NODE_ENV=production webpack -w --config config/webpack.prod.js",
     "build": "cross-env NODE_ENV=production webpack --config config/webpack.prod.js"
   },

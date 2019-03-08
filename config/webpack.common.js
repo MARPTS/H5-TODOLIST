@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const tsImportPluginFactory = require('ts-import-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
@@ -42,7 +43,13 @@ module.exports = {
             }
         },{
             test: /\.tsx?$/,
-            loader: 'awesome-typescript-loader'
+            loader: 'awesome-typescript-loader',
+            options: {
+                getCustomTransformers: () => ({
+                  before: [ tsImportPluginFactory( /** options */) ]
+                }),
+              },
+            exclude: /node_modules/
         },
         // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
         { enforce: 'pre', test: /\.js$/, loader: 'source-map-loader' }
