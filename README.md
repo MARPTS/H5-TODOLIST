@@ -9,4 +9,4 @@ npm start
 ```
 Open `http://localhost:8888`, you will see the page !
 
-![demo.png](https://marpts.github.io/H5-TODOLIST/src/static/demo.png)
+<img src="https://marpts.github.io/H5-TODOLIST/src/static/demo.png" width="200">
