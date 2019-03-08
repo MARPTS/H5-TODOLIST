@@ -254,6 +254,18 @@ var todoStorage = {
                 }
             });
         });
+    },
+    searchTodoList: function (value) {
+        return new Promise(function (resolve, rejects) {
+            var todos = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            var temp = [];
+            todos.forEach(function (todo) {
+                if (todo.title.indexOf(value) !== -1) {
+                    temp.push(todo);
+                }
+            });
+            resolve(temp);
+        });
     }
 };
 
@@ -525,8 +537,24 @@ var prompt = antd_mobile__WEBPACK_IMPORTED_MODULE_1__["Modal"].prompt;
 
 var App = /** @class */ (function (_super) {
     tslib__WEBPACK_IMPORTED_MODULE_0__["__extends"](App, _super);
+    // private autoFocusInst: any;
     function App(props) {
         var _this = _super.call(this, props) || this;
+        _this.onChange = function (value) {
+            _this.setState({
+                value: value
+            });
+            _server_localStorage__WEBPACK_IMPORTED_MODULE_4__["todoStorage"].searchTodoList(value).then(function (todoList) {
+                _this.setState({
+                    todoList: todoList
+                });
+            });
+        };
+        _this.onClear = function () {
+            _this.setState({
+                value: ''
+            });
+        };
         _this.fetchTodoList = function (completeState) {
             _server_localStorage__WEBPACK_IMPORTED_MODULE_4__["todoStorage"].fetch(completeState).then(function (data) {
                 _this.setState({
@@ -544,7 +572,8 @@ var App = /** @class */ (function (_super) {
         };
         _this.state = {
             todoList: [],
-            isHaveToDoList: false
+            isHaveToDoList: false,
+            value: ''
         };
         return _this;
     }
@@ -569,6 +598,7 @@ var App = /** @class */ (function (_super) {
             react__WEBPACK_IMPORTED_MODULE_2__["createElement"]("header", { className: "title", onClick: promptClick },
                 react__WEBPACK_IMPORTED_MODULE_2__["createElement"](antd_mobile__WEBPACK_IMPORTED_MODULE_1__["Icon"], { type: "cross-circle", className: "add-btn" }),
                 "To Do List"),
+            react__WEBPACK_IMPORTED_MODULE_2__["createElement"](antd_mobile__WEBPACK_IMPORTED_MODULE_1__["SearchBar"], { value: this.state.value, placeholder: "search your work", onChange: this.onChange, onClear: this.onClear }),
             react__WEBPACK_IMPORTED_MODULE_2__["createElement"](antd_mobile__WEBPACK_IMPORTED_MODULE_1__["Tabs"], { tabs: tabs, initialPage: 0 },
                 react__WEBPACK_IMPORTED_MODULE_2__["createElement"]("div", { style: { height: '100%', backgroundColor: '#fff' } },
                     react__WEBPACK_IMPORTED_MODULE_2__["createElement"](_components_TodoList__WEBPACK_IMPORTED_MODULE_3__["default"], { todoList: this.state.todoList, completeState: 0 /* Todo */, fetch: this.fetchTodoList })),

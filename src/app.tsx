@@ -1,4 +1,4 @@
-import {Badge, Icon, Modal, Tabs, Toast } from 'antd-mobile';
+import {Badge, Icon, Modal, SearchBar, Tabs, Toast } from 'antd-mobile';
 import * as React from 'react';
 import TodoList from './components/TodoList';
 import { todoStorage, CompleteState, Todo } from './server/localStorage';
@@ -9,15 +9,18 @@ import './app.less';
 interface State {
   todoList: Todo[];
   isHaveToDoList: boolean;
+  value: string;
 }
 
 export default class App extends React.Component<{}, State> {
+    // private autoFocusInst: any;
 
     constructor(props: {}) {
       super(props);
       this.state = {
         todoList: [],
-        isHaveToDoList: false
+        isHaveToDoList: false,
+        value: ''
       };
     }
 
@@ -41,6 +44,7 @@ export default class App extends React.Component<{}, State> {
           <div style={{height: '100%'} }>
             <header className="title" onClick={promptClick}><Icon type="cross-circle" className="add-btn" />To Do List
             </header>
+            <SearchBar value={this.state.value} placeholder="search your work" onChange={this.onChange} onClear={this.onClear} />
             <Tabs tabs={tabs}
               initialPage={0}
               // onChange={(tab, index) => { console.log('onChange', index, tab); }}
@@ -58,6 +62,23 @@ export default class App extends React.Component<{}, State> {
             </Tabs>
         </div>
           );
+    }
+
+    private onChange = (value: string) => {
+      this.setState({
+        value
+      });
+      todoStorage.searchTodoList(value).then((todoList: Todo[]) => {
+        this.setState({
+          todoList
+        });
+      });
+    }
+
+    private onClear = () => {
+      this.setState({
+        value: ''
+      });
     }
 
     private fetchTodoList = (completeState?: CompleteState) => {

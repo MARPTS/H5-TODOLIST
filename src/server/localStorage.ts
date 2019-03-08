@@ -67,6 +67,17 @@ export const todoStorage = {
                 }
             });
         });
+    },
+    searchTodoList(value: string) {
+        return new Promise((resolve, rejects) => {
+            const todos = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            let temp = [] as Todo[];
+            todos.forEach((todo: Todo) => {
+                if (todo.title.indexOf(value) !== -1) {
+                    temp.push(todo);
+                }
+            });
+            resolve(temp);
+        })
     }
 };
-
