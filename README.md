@@ -7,6 +7,6 @@ a TODOLIST H5 page base on webpack + typescript + react + ant-mobile + localStor
 npm i
 npm start
 ```
-Open `http://localhost:8888`, you will see the page !
+Webpack dev server will auto to open `http://0.0.0.0:8888`, you will see the page !
 
 <img src="https://marpts.github.io/H5-TODOLIST/src/static/demo.png" width="200">
